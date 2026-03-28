@@ -32,7 +32,7 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
 
 html, body, [class*="css"] {
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;   background: #0d0f14;
 }
 
 /* ── background ── */
@@ -40,6 +40,9 @@ html, body, [class*="css"] {
     background: #0d0f14;
     color: #e2e8f0;
 }
+            
+.st-emotion-cache-14vh5up{
+            background-color:#0d0f14}
 
 /* ── header banner ── */
 .hero-banner {
@@ -89,6 +92,7 @@ html, body, [class*="css"] {
 /* ── section headers ── */
 .section-header {
     font-family: 'IBM Plex Mono', monospace;
+    
     font-size: 1.05rem;
     font-weight: 600;
     color: #38bdf8;
