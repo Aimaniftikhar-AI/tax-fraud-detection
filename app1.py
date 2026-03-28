@@ -23,7 +23,6 @@ from imblearn.over_sampling import SMOTE
 
 st.set_page_config(
     page_title="Tax Fraud Detection System",
-    page_icon="🔍",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -227,8 +226,8 @@ html, body, [class*="css"] {
 
 st.markdown("""
 <div class="hero-banner">
-  <div class="hero-title">🔍 TECH TAX FRAUD DETECTION SYSTEM</div>
-  <div class="hero-sub">University Final Year Project &nbsp;·&nbsp; Machine Learning Pipeline &nbsp;·&nbsp; Multi-Model Evaluation</div>
+  <div class="hero-title">TECH TAX FRAUD DETECTION SYSTEM</div>
+  <div class="hero-sub">By: AIMAN IFTIKHAR & MEMOONA SHEIKH</div>
   <div>
     <span class="badge">SMOTE Balancing</span>
     <span class="badge">5 ML Models</span>
@@ -239,20 +238,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.markdown("### 🗂 Pipeline Steps")
+    st.markdown("### Pipeline Steps")
     steps = [
-        ("📂", "Upload Dataset"),
-        ("👀", "Dataset Preview"),
-        ("🧹", "Preprocessing"),
-        ("⚖️", "SMOTE Balancing"),
-        ("🤖", "Train Models"),
-        ("📊", "Model Comparison"),
-        ("🧪", "Overfitting Check"),
-        ("🏆", "Best Model"),
-        ("📉", "Confusion Matrices"),
+        ("Upload Dataset"),
+        ("Dataset Preview"),
+        ("Preprocessing"),
+        ("SMOTE Balancing"),
+        ("Train Models"),
+        ("Model Comparison"),
+        ("Overfitting Check"),
+        ("Best Model"),
+        ("Confusion Matrices"),
     ]
-    for icon, label in steps:
-        st.markdown(f"<div class='step-pill'>{icon} {label}</div>", unsafe_allow_html=True)
+    for label in steps:
+        st.markdown(f"<div class='step-pill'>{label}</div>", unsafe_allow_html=True)
 
     st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
     st.markdown("**Models Trained**")
@@ -260,7 +259,7 @@ with st.sidebar:
         st.markdown(f"<div class='step-pill'>• {m}</div>", unsafe_allow_html=True)
 
     st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
-    st.caption("© 2024 University Project")
+    st.caption("Final Project")
 
 def load_data(uploaded_file):
     """Load CSV file into a pandas DataFrame."""
@@ -282,7 +281,7 @@ def preprocess_data(df):
     """
     summary = {}
 
-    # ── 1. Missing values ──────────────────────────────
+    # 1. Missing values
     missing_before = df.isnull().sum().sum()
     df.fillna(df.median(numeric_only=True), inplace=True)
     # For categorical columns fill with mode
@@ -292,7 +291,7 @@ def preprocess_data(df):
     summary["missing_before"] = int(missing_before)
     summary["missing_after"] = int(missing_after)
 
-    # ── 2. One-Hot Encoding ───────────────────────────
+    # 2. One-Hot Encoding
     cat_cols = df.select_dtypes(include="object").columns.tolist()
     if "fraud_flag" in cat_cols:
         cat_cols.remove("fraud_flag")
@@ -300,7 +299,7 @@ def preprocess_data(df):
     df = pd.get_dummies(df, columns=cat_cols, drop_first=False)
     summary["shape_after_encoding"] = df.shape
 
-    # ── 3. Outlier removal (IQR method) ───────────────
+    # 3. Outlier removal (IQR method) 
     target = df["fraud_flag"]
     df_features = df.drop(columns=["fraud_flag"])
     numeric_cols = df_features.select_dtypes(include=[np.number]).columns
@@ -324,7 +323,7 @@ def preprocess_data(df):
     summary["outliers_removed"] = rows_before - rows_after
     summary["outlier_counts_per_col"] = outlier_counts
 
-    # ── 4. Feature Scaling ────────────────────────────
+    #  4. Feature Scaling 
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(df_features)
     feature_names = df_features.columns.tolist()
@@ -410,7 +409,7 @@ def plot_confusion_matrix(y_test, y_pred, model_name):
     return fig
 
 # SECTION 1
-st.markdown("<div class='section-header'>📂 UPLOAD DATASET</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> UPLOAD DATASET</div>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
     "Upload your CSV file  ·  Expected: tax_fraud_detection_dataset.csv",
@@ -425,7 +424,7 @@ if uploaded_file is None:
 df_raw = load_data(uploaded_file)
 
 # SECTION 2
-st.markdown("<div class='section-header'>👀 DATASET PREVIEW</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> DATASET PREVIEW</div>", unsafe_allow_html=True)
 
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Total Rows",     f"{df_raw.shape[0]:,}")
@@ -436,7 +435,7 @@ c4.metric("Missing Values", f"{df_raw.isnull().sum().sum():,}")
 st.markdown("**First 10 rows of the dataset:**")
 st.dataframe(df_raw.head(10), use_container_width=True)
 
-with st.expander("📋 Column Data Types & Nulls"):
+with st.expander(" Column Data Types & Nulls"):
     dtype_df = pd.DataFrame({
         "Column":      df_raw.columns,
         "Data Type":   df_raw.dtypes.values.astype(str),
@@ -446,13 +445,13 @@ with st.expander("📋 Column Data Types & Nulls"):
     })
     st.dataframe(dtype_df, use_container_width=True)
 
-with st.expander("📈 Statistical Summary"):
+with st.expander(" Statistical Summary"):
     st.dataframe(df_raw.describe().T.round(3), use_container_width=True)
 
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 3 
-st.markdown("<div class='section-header'>🧹 PREPROCESSING SUMMARY</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>PREPROCESSING SUMMARY</div>", unsafe_allow_html=True)
 
 with st.spinner("Running preprocessing pipeline..."):
     X_scaled, y, scaler, feature_names, summary, df_clean = preprocess_data(df_raw.copy())
@@ -471,16 +470,16 @@ with step_col4:
 # Preprocessing steps log
 st.markdown("**Step-by-Step Preprocessing Log:**")
 steps_log = {
-    "✅ Step 1 — Missing Value Imputation":
+    " Step 1 — Missing Value Imputation":
         f"Numeric columns → filled with **median**. Categorical columns → filled with **mode**. "
         f"Nulls before: **{summary['missing_before']}** → after: **{summary['missing_after']}**",
-    "✅ Step 2 — One-Hot Encoding":
+    " Step 2 — One-Hot Encoding":
         f"Categorical columns encoded: **{summary['encoded_cols'] if summary['encoded_cols'] else 'None (all numeric)'}**. "
         f"Shape after encoding: **{summary['shape_after_encoding']}**",
-    "✅ Step 3 — IQR Outlier Removal":
+    " Step 3 — IQR Outlier Removal":
         f"Used IQR method (1.5×IQR fence). Total outlier rows removed: **{summary['outliers_removed']}**. "
         f"Remaining samples: **{summary['n_samples']}**",
-    "✅ Step 4 — Feature Scaling (StandardScaler)":
+    " Step 4 — Feature Scaling (StandardScaler)":
         f"All numeric features standardized to mean=0, std=1. "
         f"Total features scaled: **{summary['n_features']}**",
 }
@@ -528,7 +527,7 @@ with st.expander("🗺 Feature Correlation Heatmap (top 10 features)"):
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 4 
-st.markdown("<div class='section-header'>⚖️ CLASS BALANCING (SMOTE)</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> CLASS BALANCING (SMOTE)</div>", unsafe_allow_html=True)
 
 unique, counts_before = np.unique(y, return_counts=True)
 before_dict = dict(zip(unique.astype(str), counts_before))
@@ -544,7 +543,7 @@ smote_c1, smote_c2 = st.columns(2)
 with smote_c1:
     st.markdown("**Before SMOTE**")
     for cls, cnt in before_dict.items():
-        label = "🔴 Fraud" if cls == "1" else "🟢 Not Fraud"
+        label = " Fraud" if cls == "1" else " Not Fraud"
         st.metric(label, f"{cnt:,}")
 
     fig_b, ax_b = plt.subplots(figsize=(4, 3))
@@ -565,7 +564,7 @@ with smote_c1:
 with smote_c2:
     st.markdown("**After SMOTE**")
     for cls, cnt in after_dict.items():
-        label = "🔴 Fraud" if cls == "1" else "🟢 Not Fraud"
+        label = " Fraud" if cls == "1" else " Not Fraud"
         st.metric(label, f"{cnt:,}")
 
     fig_a, ax_a = plt.subplots(figsize=(4, 3))
@@ -588,12 +587,12 @@ st.success(f"✅ SMOTE applied successfully. Dataset expanded from **{len(y):,}*
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 5 
-st.markdown("<div class='section-header'>🤖 TRAIN MODELS</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> TRAIN MODELS</div>", unsafe_allow_html=True)
 
 split_pct = st.slider("Train/Test Split (train %)", min_value=60, max_value=90, value=80, step=5)
 st.caption(f"Training on **{split_pct}%** of data · Testing on **{100 - split_pct}%**")
 
-train_btn = st.button("🚀  Train All 5 Models", use_container_width=False)
+train_btn = st.button("  Train All 5 Models", use_container_width=False)
 
 if "trained" not in st.session_state:
     st.session_state.trained = False
@@ -618,7 +617,7 @@ if train_btn:
     st.session_state.results_df   = results_df
     st.session_state.preds_dict   = preds_dict
     st.session_state.overfit_dict = overfit_dict
-    st.success("✅ All models trained successfully!")
+    st.success(" All models trained successfully!")
 
 if not st.session_state.trained:
     st.info("Click **Train All 5 Models** to start the training pipeline.")
@@ -634,7 +633,7 @@ y_train      = st.session_state.y_train
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 6 
-st.markdown("<div class='section-header'>📊 MODEL COMPARISON TABLE</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> MODEL COMPARISON TABLE</div>", unsafe_allow_html=True)
 
 # Add rank column
 results_display = results_df.copy()
@@ -672,12 +671,12 @@ st.pyplot(fig_cmp)
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 7 
-st.markdown("<div class='section-header'>🧪 OVERFITTING ANALYSIS</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> OVERFITTING ANALYSIS</div>", unsafe_allow_html=True)
 
 overfit_rows = []
 for name, (tr_acc, te_acc) in overfit_dict.items():
     diff = round(tr_acc - te_acc, 4)
-    status = "⚠️ Overfitting" if diff > 0.05 else "✅ Good Fit"
+    status = " Overfitting" if diff > 0.05 else " Good Fit"
     overfit_rows.append({"Model": name, "Train Acc": tr_acc, "Test Acc": te_acc,
                          "Δ Gap": diff, "Status": status})
 overfit_df = pd.DataFrame(overfit_rows)
@@ -686,13 +685,13 @@ st.dataframe(overfit_df, use_container_width=True, hide_index=True)
 for _, row in overfit_df.iterrows():
     if row["Δ Gap"] > 0.05:
         st.markdown(
-            f"<div class='overfitting-warn'>⚠️ <b>{row['Model']}</b> — Gap of <b>{row['Δ Gap']:.4f}</b> "
+            f"<div class='overfitting-warn'> <b>{row['Model']}</b> — Gap of <b>{row['Δ Gap']:.4f}</b> "
             f"suggests overfitting. Train Acc: {row['Train Acc']} | Test Acc: {row['Test Acc']}</div>",
             unsafe_allow_html=True
         )
     else:
         st.markdown(
-            f"<div class='overfitting-ok'>✅ <b>{row['Model']}</b> — Generalising well. "
+            f"<div class='overfitting-ok'> <b>{row['Model']}</b> — Generalising well. "
             f"Train Acc: {row['Train Acc']} | Test Acc: {row['Test Acc']}</div>",
             unsafe_allow_html=True
         )
@@ -719,7 +718,7 @@ st.pyplot(fig_ov)
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 8
-st.markdown("<div class='section-header'>🏆 BEST MODEL</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'> BEST MODEL</div>", unsafe_allow_html=True)
 
 best_row = results_df.iloc[0]
 bm_c1, bm_c2, bm_c3 = st.columns([1, 2, 1])
@@ -727,7 +726,7 @@ bm_c1, bm_c2, bm_c3 = st.columns([1, 2, 1])
 with bm_c2:
     st.markdown(f"""
     <div class="best-model-box">
-      <div class="best-model-label">🏆 BEST PERFORMING MODEL</div>
+      <div class="best-model-label"> BEST PERFORMING MODEL</div>
       <div class="best-model-name">{best_row['Model']}</div>
       <div style="margin-top:1rem; display:flex; justify-content:center; gap:2rem;">
         <div><div class="best-model-label">ACCURACY</div><div style="color:#f1f5f9;font-size:1.4rem;font-weight:700;">{best_row['Accuracy']:.4f}</div></div>
@@ -739,7 +738,7 @@ with bm_c2:
     """, unsafe_allow_html=True)
 
 # Classification report for best model
-with st.expander(f"📋 Full Classification Report — {best_row['Model']}"):
+with st.expander(f" Full Classification Report — {best_row['Model']}"):
     best_preds = preds_dict[best_row["Model"]]
     report_str = classification_report(y_test, best_preds, target_names=["Not Fraud", "Fraud"])
     st.code(report_str, language="text")
@@ -748,7 +747,7 @@ st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────
 # SECTION: PREDICT TAX FRAUD (NEW)
 # ─────────────────────────────────────────────────────────
-st.markdown("<div class='section-header'>🧪 PREDICT TAX FRAUD</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>PREDICT TAX FRAUD</div>", unsafe_allow_html=True)
 st.markdown("Enter feature values below and get a fraud prediction from any trained model.")
 
 # we need the trained models and the scaler from session state / preprocessing
@@ -772,7 +771,7 @@ else:
     with pred_col2:
         st.markdown("<br>", unsafe_allow_html=True)
         best_model_name = st.session_state.results_df.iloc[0]["Model"]
-        st.caption(f"🏆 Best model: **{best_model_name}**")
+        st.caption(f" Best model: **{best_model_name}**")
 
     selected_model = fitted_models[selected_model_name]
 
@@ -826,7 +825,7 @@ else:
                     )
 
     st.markdown("<br>", unsafe_allow_html=True)
-    predict_btn = st.button("🔍 Run Prediction", use_container_width=False)
+    predict_btn = st.button("Run Prediction", use_container_width=False)
 
     if predict_btn:
         # ── Build input DataFrame in the same feature order ──
@@ -858,7 +857,7 @@ else:
             if prediction == 1:
                 st.markdown(f"""
                 <div class='overfitting-warn' style='text-align:center; padding: 1.5rem 2rem;'>
-                    <div style='font-size:2rem;'>🚨</div>
+                    <div style='font-size:2rem;'></div>
                     <div style='font-size:1.3rem; font-weight:700; margin-top:0.3rem;'>FRAUD DETECTED</div>
                     <div style='font-size:0.85rem; margin-top:0.4rem; color:#fcd34d;'>
                         Model: <b>{selected_model_name}</b> &nbsp;·&nbsp; Prediction: <b>Class 1 (Fraud)</b>
@@ -868,7 +867,7 @@ else:
             else:
                 st.markdown(f"""
                 <div class='overfitting-ok' style='text-align:center; padding: 1.5rem 2rem;'>
-                    <div style='font-size:2rem;'>✅</div>
+                    <div style='font-size:2rem;'></div>
                     <div style='font-size:1.3rem; font-weight:700; margin-top:0.3rem;'>NOT FRAUD</div>
                     <div style='font-size:0.85rem; margin-top:0.4rem; color:#6ee7b7;'>
                         Model: <b>{selected_model_name}</b> &nbsp;·&nbsp; Prediction: <b>Class 0 (Not Fraud)</b>
@@ -880,8 +879,8 @@ else:
         if prob_available:
             st.markdown("<br>", unsafe_allow_html=True)
             prob_c1, prob_c2 = st.columns(2)
-            prob_c1.metric("🟢 Not Fraud Probability", f"{not_fraud_prob}%")
-            prob_c2.metric("🔴 Fraud Probability",     f"{fraud_prob}%")
+            prob_c1.metric(" Not Fraud Probability", f"{not_fraud_prob}%")
+            prob_c2.metric(" Fraud Probability",     f"{fraud_prob}%")
 
             # simple horizontal bar chart
             fig_prob, ax_prob = plt.subplots(figsize=(6, 1.2))
@@ -900,14 +899,14 @@ else:
             st.pyplot(fig_prob)
 
         # ── Show the input values used ────────────────────
-        with st.expander("📋 Input Values Used for Prediction"):
+        with st.expander(" Input Values Used for Prediction"):
             st.dataframe(input_df.T.rename(columns={0: "Value"}).round(4),
                          use_container_width=True)
 
 st.markdown("<hr class='thin-divider'>", unsafe_allow_html=True)
 
 # SECTION 9 
-st.markdown("<div class='section-header'>📉 CONFUSION MATRICES</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>CONFUSION MATRICES</div>", unsafe_allow_html=True)
 st.caption("All 5 models shown below — rows = actual, columns = predicted.")
 
 model_names = list(preds_dict.keys())
